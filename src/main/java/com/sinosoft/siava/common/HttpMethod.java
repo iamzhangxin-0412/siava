@@ -2,14 +2,23 @@ package com.sinosoft.siava.common;
 
 /**
  * HTTP方法常量
+ * @author zhangxin
  */
 public class HttpMethod {
-    //GET
+    /**
+     * GET方法
+     */
     public static final String GET = "GET";
-    //POST
+    /**
+     * POST方法
+     */
     public static final String POST = "POST";
-    //PUT
+    /**
+     * PUT方法
+     */
     public static final String PUT = "PUT";
-    //DELETE
+    /**
+     * DELETE方法
+     */
     public static final String DELETE = "DELETE";
 }

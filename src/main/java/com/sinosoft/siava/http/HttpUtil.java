@@ -27,6 +27,7 @@ import java.util.Map;
 
 /**
  * Http工具类
+ * @author zhangxin
  */
 public class HttpUtil {
 
@@ -52,7 +53,8 @@ public class HttpUtil {
      * @param httpUrl 地址
      */
     public String sendHttpPost(String httpUrl) {
-        HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
+        // 创建httpPost
+        HttpPost httpPost = new HttpPost(httpUrl);
         return sendHttpPost(httpPost);
     }
 
@@ -61,12 +63,13 @@ public class HttpUtil {
      * @param httpUrl 地址
      * @param params 参数
      */
-    public String sendHttpPost(String httpUrl, String params) {
-        HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
+    public String sendHttpPost(String httpUrl, String params,String contentType) {
+        // 创建httpPost
+        HttpPost httpPost = new HttpPost(httpUrl);
         try {
             //设置参数
             StringEntity stringEntity = new StringEntity(params, "UTF-8");
-            stringEntity.setContentType("application/x-www-form-urlencoded");
+            stringEntity.setContentType(contentType);
             httpPost.setEntity(stringEntity);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -77,10 +80,20 @@ public class HttpUtil {
     /**
      * 发送 post请求
      * @param httpUrl 地址
+     * @param params 参数
+     */
+    public String sendHttpPost(String httpUrl, String params) {
+        return this.sendHttpPost(httpUrl,params,"application/x-www-form-urlencoded");
+    }
+
+    /**
+     * 发送 post请求
+     * @param httpUrl 地址
      * @param maps 参数
      */
     public String sendHttpPost(String httpUrl, Map<String, String> maps) {
-        HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
+        // 创建httpPost
+        HttpPost httpPost = new HttpPost(httpUrl);
         // 创建参数队列
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         for (String key : maps.keySet()) {
@@ -102,7 +115,8 @@ public class HttpUtil {
      * @param fileLists 附件
      */
     public String sendHttpPost(String httpUrl, Map<String, String> maps, List<File> fileLists) {
-        HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
+        // 创建httpPost
+        HttpPost httpPost = new HttpPost(httpUrl);
         MultipartEntityBuilder meBuilder = MultipartEntityBuilder.create();
         for (String key : maps.keySet()) {
             meBuilder.addPart(key, new StringBody(maps.get(key), ContentType.TEXT_PLAIN));

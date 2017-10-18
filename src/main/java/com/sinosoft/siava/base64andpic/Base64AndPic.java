@@ -6,17 +6,19 @@ import java.io.*;
 
 /**
  * 图片转Base64与Base64转图片工具类
+ * @author zhangxin
  */
 public class Base64AndPic {
 
     /**
-     * 图片转化成base64字符串
+     * 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
      * @param picPath 要转化的图片路径
      * @return 转换后的Base64字符串
      */
     public static String getImageStr(String picPath)
-    {//将图片文件转化为字节数组字符串，并对其进行Base64编码处理
-        String imgFile = picPath;//待处理的图片
+    {
+        //待处理的图片
+        String imgFile = picPath;
         InputStream in = null;
         byte[] data = null;
         //读取图片字节数组
@@ -33,7 +35,8 @@ public class Base64AndPic {
         }
         //对字节数组Base64编码
         BASE64Encoder encoder = new BASE64Encoder();
-        return encoder.encode(data);//返回Base64编码过的字节数组字符串
+        //返回Base64编码过的字节数组字符串
+        return encoder.encode(data);
     }
 
     /**
@@ -42,11 +45,11 @@ public class Base64AndPic {
      * @param file 转换后输出的文件
      * @return 转换是否成功
      */
-    public static boolean GenerateImage(String imgStr,File file)
+    public static boolean generateImage(String imgStr,File file)
     {
         boolean flag = false;
-        //对字节数组字符串进行Base64解码并生成图片
-        if (imgStr == null || imgStr.equals("")) { //图像数据为空
+        //图像数据为空
+        if (imgStr == null || "".equals(imgStr)) {
             throw new RuntimeException("图像数据为空，请确认");
         }
         BASE64Decoder decoder = new BASE64Decoder();

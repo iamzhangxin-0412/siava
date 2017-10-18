@@ -2,6 +2,7 @@ package com.sinosoft.siava.excel;
 
 
 import com.sinosoft.siava.annotation.MapperCell;
+import com.sinosoft.siava.common.ConstValueDatatype;
 import org.apache.poi.openxml4j.exceptions.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
@@ -124,11 +125,12 @@ public class ExcelProcess {
             if (null != sheet) {
                 resultList = new ArrayList<T>(sheet.getLastRowNum() - 1);
                 Row row = sheet.getRow(this.startRow);
-
-                Map<String, Field> fieldMap = new HashMap<String, Field>();
-                Map<String, String> titleMap = new HashMap<String, String>();
-
                 Field[] fields = clazz.getDeclaredFields();
+
+                Map<String, Field> fieldMap = new HashMap<String, Field>(fields.length);
+                Map<String, String> titleMap = new HashMap<String, String>(row.getRowNum());
+
+
                 //这里开始处理映射类型里的注解
                 for (Field field : fields) {
                     if (field.isAnnotationPresent(MapperCell.class)) {
@@ -195,26 +197,27 @@ public class ExcelProcess {
                         field.set(o, format.format(cell.getDateCellValue()));
                     }
                 } else {
-                    if (field.getType().isAssignableFrom(Integer.class) || field.getType().getName().equals("int")) {
+                    if (field.getType().isAssignableFrom(Integer.class) || ConstValueDatatype.DATATYPE_INT.equals(field.getType().getName())) {
                         field.setInt(o, (int) cell.getNumericCellValue());
-                    } else if (field.getType().isAssignableFrom(Short.class) || field.getType().getName().equals("short")) {
+                    } else if (field.getType().isAssignableFrom(Short.class) || ConstValueDatatype.DATATYPE_SHORT.equals(field.getType().getName())) {
                         field.setShort(o, (short) cell.getNumericCellValue());
-                    } else if (field.getType().isAssignableFrom(Float.class) || field.getType().getName().equals("float")) {
+                    } else if (field.getType().isAssignableFrom(Float.class) || ConstValueDatatype.DATATYPE_FLOAT.equals(field.getType().getName())) {
                         field.setFloat(o, (float) cell.getNumericCellValue());
-                    } else if (field.getType().isAssignableFrom(Byte.class) || field.getType().getName().equals("byte")) {
+                    } else if (field.getType().isAssignableFrom(Byte.class) || ConstValueDatatype.DATATYPE_BYTE.equals(field.getType().getName())) {
                         field.setByte(o, (byte) cell.getNumericCellValue());
-                    } else if (field.getType().isAssignableFrom(Double.class) || field.getType().getName().equals("double")) {
+                    } else if (field.getType().isAssignableFrom(Double.class) || ConstValueDatatype.DATATYPE_DOUBLE.equals(field.getType().getName())) {
                         field.setDouble(o, cell.getNumericCellValue());
                     } else if (field.getType().isAssignableFrom(String.class)) {
                         String s = String.valueOf(cell.getNumericCellValue());
-                        if (s.contains("E")) {
+                        if (s.contains(ConstValueDatatype.DATATYPE_E)) {
                             s = s.trim();
                             BigDecimal bigDecimal = new BigDecimal(s);
                             s = bigDecimal.toPlainString();
                         }
                         //防止整数判定为浮点数
-                        if (s.endsWith(".0"))
+                        if (s.endsWith(ConstValueDatatype.DATATYPE_ENDPOINTZERO)) {
                             s = s.substring(0, s.indexOf(".0"));
+                        }
                         field.set(o, s);
                     } else {
                         field.set(o, cell.getNumericCellValue());
@@ -257,15 +260,18 @@ public class ExcelProcess {
      * @return 写入结果
      */
     public <T> boolean createExcel(List<T> list) {
-        if (null == this.excelFilePath || "".equals(this.excelFilePath))
+        if (null == this.excelFilePath || "".equals(this.excelFilePath)){
             throw new NullPointerException("excelFilePath is null");
+        }
         boolean result = false;
         FileOutputStream fileOutputStream = null;
+
         if (null != list && !list.isEmpty()) {
             T test = list.get(0);
-            Map<String, Field> fieldMap = new HashMap<String, Field>();
-            Map<Integer, String> titleMap = new TreeMap<Integer, String>();
             Field[] fields = test.getClass().getDeclaredFields();
+            Map<String, Field> fieldMap = new HashMap<String, Field>(fields.length);
+            Map<Integer, String> titleMap = new TreeMap<Integer, String>();
+
             for (Field field : fields) {
                 if (field.isAnnotationPresent(MapperCell.class)) {
                     MapperCell mapperCell = field.getAnnotation(MapperCell.class);

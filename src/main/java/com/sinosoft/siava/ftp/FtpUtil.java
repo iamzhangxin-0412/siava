@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.SocketException;
 
+/**
+ * FTP操作工具类
+ * @author zhangxin
+ */
 public class FtpUtil {
 
     private static Logger logger = LoggerFactory.getLogger(FtpUtil.class);
@@ -15,8 +19,10 @@ public class FtpUtil {
         FTPClient ftpClient = new FTPClient();
         try {
             ftpClient = new FTPClient();
-            ftpClient.connect(ftpHost, ftpPort);// 连接FTP服务器
-            ftpClient.login(ftpUserName, ftpPassword);// 登陆FTP服务器
+            // 连接FTP服务器
+            ftpClient.connect(ftpHost, ftpPort);
+            // 登陆FTP服务器
+            ftpClient.login(ftpUserName, ftpPassword);
             if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
                 logger.info("未连接到FTP，用户名或密码错误。");
                 ftpClient.disconnect();
@@ -51,7 +57,8 @@ public class FtpUtil {
 
         try {
             ftpClient = getFTPClient(ftpHost, ftpUserName, ftpPassword, ftpPort);
-            ftpClient.setControlEncoding("UTF-8"); // 中文支持
+            // 中文支持
+            ftpClient.setControlEncoding("UTF-8");
             ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
             ftpClient.enterLocalPassiveMode();
             ftpClient.changeWorkingDirectory(ftpPath);

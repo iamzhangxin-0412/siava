@@ -4,7 +4,7 @@
 
     <groupId>com.sinosoft</groupId>
     <artifactId>siava</artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>1.0.4.RELEASE</version>
     <packaging>jar</packaging>
 
     <name>siava</name>
@@ -14,13 +14,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- 日志组件 -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -76,7 +69,22 @@
             <artifactId>commons-codec</artifactId>
             <version>1.11</version>
         </dependency>
-
-
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>Nexus Snapshot</name>
+            <url>http://www.minicoral.top:10081/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <name>User Porject Release</name>
+            <url>http://www.minicoral.top:10081/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
+
 </project>

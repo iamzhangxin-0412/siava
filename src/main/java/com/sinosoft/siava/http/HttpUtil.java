@@ -33,12 +33,6 @@ public class HttpUtil {
 
     protected Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
-    private RequestConfig requestConfig = RequestConfig.custom()
-            .setSocketTimeout(15000)
-            .setConnectTimeout(15000)
-            .setConnectionRequestTimeout(15000)
-            .build();
-
     private static HttpUtil instance = null;
     private HttpUtil(){}
     public static HttpUtil getInstance(){
@@ -143,7 +137,6 @@ public class HttpUtil {
         try {
             // 创建默认的httpClient实例.
             httpClient = HttpClients.createDefault();
-            httpPost.setConfig(requestConfig);
             // 执行请求
             response = httpClient.execute(httpPost);
             entity = response.getEntity();

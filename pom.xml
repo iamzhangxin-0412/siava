@@ -4,7 +4,7 @@
 
     <groupId>com.sinosoft</groupId>
     <artifactId>siava</artifactId>
-    <version>1.0.4.RELEASE</version>
+    <version>1.0.7.RELEASE</version>
     <packaging>jar</packaging>
 
     <name>siava</name>
@@ -59,9 +59,9 @@
         </dependency>
 
         <dependency>
-            <groupId>dom4j</groupId>
+            <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
+            <version>2.1.1</version>
         </dependency>
 
         <dependency>
@@ -69,6 +69,13 @@
             <artifactId>commons-codec</artifactId>
             <version>1.11</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.28</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>

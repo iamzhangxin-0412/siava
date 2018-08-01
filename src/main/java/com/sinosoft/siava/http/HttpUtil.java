@@ -56,6 +56,7 @@ public class HttpUtil {
      * 发送 post请求
      * @param httpUrl 地址
      * @param params 参数
+	 * @param contentType 媒体类型，如：application/json等
      */
     public String sendHttpPost(String httpUrl, String params,String contentType) {
         // 创建httpPost

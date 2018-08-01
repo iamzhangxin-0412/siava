@@ -1,6 +1,8 @@
 package com.sinosoft.siava.math;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
 
 public class Calculator {
@@ -30,6 +32,24 @@ public class Calculator {
             }
         }
         return Double.valueOf(resultStack.pop());
+    }
+
+    /**
+     * 根据给定的表达式获取所有的计算参数
+     * @param expression 要获取参数的表达式
+     * @return 所有的参数列表
+     */
+    public List<String> getAllParams(String expression) {
+        List<String> params = new ArrayList<String>();
+        prepare(expression);
+        Collections.reverse(postfixStack);
+        while (!postfixStack.isEmpty()) {
+            String currentValue  = postfixStack.pop();
+            if (!isOperator(currentValue.charAt(0))) {
+                params.add(currentValue);
+            }
+        }
+        return params;
     }
 
     /**

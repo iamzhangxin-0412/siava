@@ -29,7 +29,7 @@ public class XmlUtil {
             } else if (object instanceof Collection) {
                 collToElement((Collection) object, root);
             } else {
-                pojoToElement(object, root);
+                objectToElement(object, root);
             }
         } else {
             root.setText("");
@@ -67,7 +67,7 @@ public class XmlUtil {
                 Element elementOfObject = root.addElement(elementName);
                 collToElement((Collection) value, elementOfObject);
             } else {
-                toElement(value, root);
+                pojoToElement(value, root);
             }
 
         }
@@ -101,7 +101,7 @@ public class XmlUtil {
      * @param obj
      * @param root
      */
-    private static void pojoToElement(Object obj, Element root) {
+    private static void objectToElement(Object obj, Element root) {
         Class<?> classes = obj.getClass();
 //        String objName = classes.getName();
 //        String elementName = objName.substring(objName.lastIndexOf(".") + 1, objName.length());
@@ -132,6 +132,47 @@ public class XmlUtil {
         }
     }
 
+    /**
+     *
+     * @param obj
+     * @param root
+     */
+    private static void pojoToElement(Object obj, Element root) {
+        Class<?> classes = obj.getClass();
+        String objName = classes.getName();
+        if (classes.isAnnotationPresent(XmlNodeName.class)) {
+            XmlNodeName xmlNameNode = classes.getAnnotation(XmlNodeName.class);
+            objName = xmlNameNode.name();
+        }
+        String elementName = objName.substring(objName.lastIndexOf(".") + 1, objName.length());
+        /** 该类为一个节点 */
+        Element elementOfObject = null;
+        if(!root.getName().equals(elementName)){
+            elementOfObject = root.addElement(elementName);
+        }else{
+            elementOfObject = root;
+        }
+        Field[] fields = classes.getDeclaredFields();
+        for (Field f : fields) {
+            if (Modifier.isStatic(f.getModifiers()))
+                continue;
+            String name = f.getName();
+            if (f.isAnnotationPresent(XmlNodeName.class)) {
+                XmlNodeName xmlNameNode = f.getAnnotation(XmlNodeName.class);
+                name = xmlNameNode.name();
+            }
+            f.setAccessible(true);
+            Object value = null;
+            try {
+                value = f.get(obj);
+            } catch (Exception e) {
+                value = null;
+            }
+            Element elementValue = elementOfObject.addElement(name);
+            toElement(value, elementValue);
+        }
+    }
+
     public static String createXmlDocument(Object obj) {
         return createXmlDocument(obj, "UTF-8");
     }
@@ -140,6 +181,10 @@ public class XmlUtil {
         Class<?> classes = obj.getClass();
         String objName = classes.getName();
         String elementName = objName.substring(objName.lastIndexOf(".") + 1, objName.length());
+        if (classes.isAnnotationPresent(XmlNodeName.class)) {
+            XmlNodeName xmlNameNode = classes.getAnnotation(XmlNodeName.class);
+            elementName = xmlNameNode.name();
+        }
         return createXmlDocument(obj,elementName, encode);
     }
 
@@ -171,5 +216,4 @@ public class XmlUtil {
         }
         return xmlDoc.asXML();
     }
-
 }

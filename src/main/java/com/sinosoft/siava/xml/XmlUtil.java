@@ -1,5 +1,6 @@
 package com.sinosoft.siava.xml;
 
+import com.sinosoft.siava.annotation.XmlNodeName;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -102,28 +103,31 @@ public class XmlUtil {
      */
     private static void pojoToElement(Object obj, Element root) {
         Class<?> classes = obj.getClass();
-        String objName = classes.getName();
-        String elementName = objName.substring(objName.lastIndexOf(".") + 1, objName.length());
-        /** 该类为一个节点 */
-        Element elementOfObject = null;
-        if(!root.getName().equals(elementName)){
-            elementOfObject = root.addElement(elementName);
-        }else{
-            elementOfObject = root;
-        }
+//        String objName = classes.getName();
+//        String elementName = objName.substring(objName.lastIndexOf(".") + 1, objName.length());
+//        /** 该类为一个节点 */
+//        Element elementOfObject = null;
+        //        if(!root.getName().equals(elementName)){
+//            elementOfObject = root.addElement(elementName);
+//        }else{
+//            elementOfObject = root;
+//        }
         Field[] fields = classes.getDeclaredFields();
         for (Field f : fields) {
             if (Modifier.isStatic(f.getModifiers()))
                 continue;
             String name = f.getName();
+            if (f.isAnnotationPresent(XmlNodeName.class)) {
+                XmlNodeName xmlNameNode = f.getAnnotation(XmlNodeName.class);
+                name = xmlNameNode.name();
+            }
             f.setAccessible(true);
             Object value = null;
             try {
                 value = f.get(obj);
-            } catch (Exception e) {
-                value = null;
+            } catch (Exception ignored) {
             }
-            Element elementValue = elementOfObject.addElement(name);
+            Element elementValue = root.addElement(name);
             toElement(value, elementValue);
         }
     }
@@ -161,13 +165,11 @@ public class XmlUtil {
             // 把创建好的XML文档写入字符串
             xmlWriter.write(xmlDoc);
 
-            // 打印字符串,即是XML文档
-            System.out.println(stringWriter.toString());
-
             xmlWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return xmlDoc.asXML();
     }
+
 }

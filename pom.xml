@@ -4,7 +4,7 @@
 
     <groupId>com.sinosoft</groupId>
     <artifactId>siava</artifactId>
-    <version>1.0.8.RELEASE</version>
+    <version>1.0.9.RELEASE</version>
     <packaging>jar</packaging>
 
     <name>siava</name>
@@ -75,6 +75,11 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.28</version>
         </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
 
     </dependencies>
 
@@ -82,7 +87,7 @@
         <repository>
             <id>nexus</id>
             <name>Nexus Snapshot</name>
-            <url>http://www.minicoral.top:10081/repository/maven-public/</url>
+            <url>http://www.minicoral.top:8081/repository/maven-releases/</url>
         </repository>
     </repositories>
 
@@ -90,7 +95,7 @@
         <repository>
             <id>nexus</id>
             <name>User Porject Release</name>
-            <url>http://www.minicoral.top:10081/repository/maven-releases/</url>
+            <url>http://www.minicoral.top:8081/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
 

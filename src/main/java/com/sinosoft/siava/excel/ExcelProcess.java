@@ -118,7 +118,7 @@ public class ExcelProcess {
      * @param <T>   泛型
      * @return 读取结果
      */
-    public <T> List<T> parse(Class<T> clazz) {
+    public <T> List<T> parse(Class<T> clazz) throws RuntimeException {
         List<T> resultList = null;
         try {
             Sheet sheet = workbook.getSheet(this.sheetName);
@@ -164,12 +164,16 @@ public class ExcelProcess {
             }
         } catch (InstantiationException e) {
             logger.error("初始化异常", e);
+            throw new RuntimeException(e.getMessage());
         } catch (IllegalAccessException e) {
             logger.error("初始化异常", e);
+            throw new RuntimeException(e.getMessage());
         } catch (ParseException e) {
             logger.error("时间格式化异常:{}", e);
+            throw new RuntimeException(e.getMessage());
         } catch (Exception e) {
             logger.error("其他异常", e);
+            throw new RuntimeException(e.getMessage());
         }
         return resultList;
     }

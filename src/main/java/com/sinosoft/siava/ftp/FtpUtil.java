@@ -59,7 +59,7 @@ public class FtpUtil {
             ftpClient = getFTPClient(ftpHost, ftpUserName, ftpPassword, ftpPort);
             // 中文支持
             ftpClient.setControlEncoding("UTF-8");
-            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+//            ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
             ftpClient.enterLocalPassiveMode();
             ftpClient.changeWorkingDirectory(ftpPath);
 

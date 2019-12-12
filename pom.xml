@@ -4,7 +4,7 @@
 
     <groupId>com.sinosoft</groupId>
     <artifactId>siava</artifactId>
-    <version>1.0.9.RELEASE</version>
+    <version>1.0.20.RELEASE</version>
     <packaging>jar</packaging>
 
     <name>siava</name>
@@ -81,21 +81,27 @@
             <version>0.1.55</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>5.1.5.RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>nexus</id>
-            <name>Nexus Snapshot</name>
-            <url>http://www.minicoral.top:8081/repository/maven-releases/</url>
-        </repository>
-    </repositories>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>nexus</id>-->
+<!--            <name>Nexus Snapshot</name>-->
+<!--            <url>http://www.minicoral.cn:8081/repository/maven-releases/</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
     <distributionManagement>
         <repository>
             <id>nexus</id>
             <name>User Porject Release</name>
-            <url>http://www.minicoral.top:8081/repository/maven-releases/</url>
+            <url>http://www.minicoral.cn:8081/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
 

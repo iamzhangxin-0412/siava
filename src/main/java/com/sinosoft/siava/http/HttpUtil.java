@@ -2,9 +2,13 @@ package com.sinosoft.siava.http;
 
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -26,6 +30,7 @@ import java.util.Map;
 
 /**
  * Http工具类
+ *
  * @author zhangxin
  */
 public class HttpUtil {
@@ -33,8 +38,11 @@ public class HttpUtil {
     protected Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
     private static HttpUtil instance = null;
-    private HttpUtil(){}
-    public static HttpUtil getInstance(){
+
+    private HttpUtil() {
+    }
+
+    public static HttpUtil getInstance() {
         if (instance == null) {
             instance = new HttpUtil();
         }
@@ -43,6 +51,52 @@ public class HttpUtil {
 
     /**
      * 发送 post请求
+     *
+     * @param httpUrl 地址
+     */
+    public String sendHttpGet(String httpUrl) {
+        // 创建httpPost
+        HttpGet httpGet = new HttpGet(httpUrl);
+        return sendHttpGet(httpGet);
+    }
+
+    private String sendHttpGet(HttpGet httpGet) {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        String responseBody = "";
+        try {
+            System.out.println("Executing request " + httpGet.getRequestLine());
+            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+                public String handleResponse(
+                        final HttpResponse response) throws ClientProtocolException, IOException {
+                    int status = response.getStatusLine().getStatusCode();
+                    if (status >= 200 && status < 300) {
+                        HttpEntity entity = response.getEntity();
+                        return entity != null ? EntityUtils.toString(entity) : null;
+                    } else {
+                        throw new ClientProtocolException("Unexpected response status: " + status);
+                    }
+                }
+
+            };
+            responseBody = httpclient.execute(httpGet, responseHandler);
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                httpclient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                httpclient = null;
+            }
+        }
+        return responseBody;
+    }
+
+    /**
+     * 发送 post请求
+     *
      * @param httpUrl 地址
      */
     public String sendHttpPost(String httpUrl) {
@@ -53,11 +107,12 @@ public class HttpUtil {
 
     /**
      * 发送 post请求
-     * @param httpUrl 地址
-     * @param params 参数
-	 * @param contentType 媒体类型，如：application/json等
+     *
+     * @param httpUrl     地址
+     * @param params      参数
+     * @param contentType 媒体类型，如：application/json等
      */
-    public String sendHttpPost(String httpUrl, String params,String contentType) {
+    public String sendHttpPost(String httpUrl, String params, String contentType, String encod) {
         // 创建httpPost
         HttpPost httpPost = new HttpPost(httpUrl);
         try {
@@ -73,17 +128,31 @@ public class HttpUtil {
 
     /**
      * 发送 post请求
-     * @param httpUrl 地址
-     * @param params 参数
+     *
+     * @param httpUrl     地址
+     * @param params      参数
+     * @param contentType 媒体类型，如：application/json等
      */
-    public String sendHttpPost(String httpUrl, String params) {
-        return this.sendHttpPost(httpUrl,params,"application/x-www-form-urlencoded");
+    public String sendHttpPost(String httpUrl, String params, String contentType) {
+
+        return this.sendHttpPost(httpUrl, params, contentType, "UTF-8");
     }
 
     /**
      * 发送 post请求
+     *
      * @param httpUrl 地址
-     * @param maps 参数
+     * @param params  参数
+     */
+    public String sendHttpPost(String httpUrl, String params) {
+        return this.sendHttpPost(httpUrl, params, "application/x-www-form-urlencoded");
+    }
+
+    /**
+     * 发送 post请求
+     *
+     * @param httpUrl 地址
+     * @param maps    参数
      */
     public String sendHttpPost(String httpUrl, Map<String, String> maps) {
         // 创建httpPost
@@ -104,8 +173,9 @@ public class HttpUtil {
 
     /**
      * 发送 post请求（带文件）
-     * @param httpUrl 地址
-     * @param maps 参数
+     *
+     * @param httpUrl   地址
+     * @param maps      参数
      * @param fileLists 附件
      */
     public String sendHttpPost(String httpUrl, Map<String, String> maps, List<File> fileLists) {
@@ -115,7 +185,7 @@ public class HttpUtil {
         for (String key : maps.keySet()) {
             meBuilder.addPart(key, new StringBody(maps.get(key), ContentType.TEXT_PLAIN));
         }
-        for(File file : fileLists) {
+        for (File file : fileLists) {
             FileBody fileBody = new FileBody(file);
             meBuilder.addPart("files", fileBody);
         }
@@ -126,6 +196,7 @@ public class HttpUtil {
 
     /**
      * 发送Post请求
+     *
      * @param httpPost
      * @return
      */
@@ -158,4 +229,7 @@ public class HttpUtil {
         }
         return responseContent;
     }
+
+    public static void main(String[] args) {
+        System.out.println((int) (Math.random() * 10));}
 }

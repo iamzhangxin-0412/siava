@@ -1,7 +1,6 @@
 package com.sinosoft.siava.base64andpic;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 import java.io.*;
 
 /**
@@ -34,9 +33,9 @@ public class Base64AndPic {
             e.printStackTrace();
         }
         //对字节数组Base64编码
-        BASE64Encoder encoder = new BASE64Encoder();
+        Base64 base64 = new Base64();
         //返回Base64编码过的字节数组字符串
-        return encoder.encode(data);
+        return new String(base64.encode(data));
     }
 
     /**
@@ -52,11 +51,11 @@ public class Base64AndPic {
         if (imgStr == null || "".equals(imgStr)) {
             throw new RuntimeException("图像数据为空，请确认");
         }
-        BASE64Decoder decoder = new BASE64Decoder();
+        Base64 base64 = new Base64();
         try
         {
             //Base64解码
-            byte[] b = decoder.decodeBuffer(imgStr);
+            byte[] b = base64.decode(imgStr);
             for(int i=0;i<b.length;++i)
             {
                 if(b[i]<0)
